@@ -2,23 +2,22 @@ require_relative '../../spec_helper'
 require_lib 'reek/smells/too_many_instance_variables'
 
 RSpec.describe Reek::Smells::TooManyInstanceVariables do
-  context 'reporting smell' do
-    it 'reports the smell parameters' do
-      src = <<-EOS
-        class Empty
-          def ivars
-            @a = @b = @c = @d = 1
-            @e = 1
-          end
+  it 'reports the right values' do
+    src = <<-EOS
+      class Empty
+        def ivars
+          @a = @b = @c = @d = 1
+          @e = 1
         end
-      EOS
+      end
+    EOS
 
-      expect(src).to reek_of(described_class,
-                             lines: [1],
-                             count: 5,
-                             message: 'has at least 5 instance variables',
-                             context: 'Empty')
-    end
+    expect(src).to reek_of(described_class,
+                           lines:   [1],
+                           context: 'Empty',
+                           message: 'has at least 5 instance variables',
+                           source:  'string',
+                           count:   5)
   end
 
   context 'counting instance variables' do

@@ -1,11 +1,36 @@
 require_relative '../../spec_helper'
 require_lib 'reek/smells/uncommunicative_parameter_name'
-require_relative 'smell_detector_shared'
-require_lib 'reek/context/method_context'
 
 RSpec.describe Reek::Smells::UncommunicativeParameterName do
-  let(:detector) { build(:smell_detector, smell_type: :UncommunicativeParameterName) }
-  it_should_behave_like 'SmellDetector'
+  it 'reports the right values' do
+    src = <<-EOS
+      def m(a)
+        a
+      end
+    EOS
+
+    expect(src).to reek_of(described_class,
+                           lines:   [1],
+                           context: 'm',
+                           message: "has the parameter name 'a'",
+                           source:  'string',
+                           name:    'a')
+  end
+
+  it 'does count all occurences' do
+    src = <<-EOS
+      def m(a, b)
+        [a, b]
+      end
+    EOS
+
+    expect(src).to reek_of(described_class,
+                           lines: [1],
+                           name:  'a')
+    expect(src).to reek_of(described_class,
+                           lines: [1],
+                           name:  'b')
+  end
 
   { 'obj.' => 'with a receiver',
     '' => 'without a receiver' }.each do |host, description|
@@ -69,28 +94,6 @@ RSpec.describe Reek::Smells::UncommunicativeParameterName do
         expect(src).to reek_of(:UncommunicativeParameterName,
                                name: 'c')
       end
-    end
-  end
-
-  describe 'sniff' do
-    let(:source) { 'def foo(bar2); baz(bar2); end' }
-    let(:context) { method_context(source) }
-    let(:detector) { build(:smell_detector, smell_type: :UncommunicativeParameterName) }
-
-    it 'returns an array of smell warnings' do
-      smells = detector.sniff(context)
-      expect(smells.length).to eq(1)
-      expect(smells[0]).to be_a_kind_of(Reek::Smells::SmellWarning)
-    end
-
-    it 'contains proper smell warnings' do
-      smells = detector.sniff(context)
-      warning = smells[0]
-
-      expect(warning.smell_type).to eq(Reek::Smells::UncommunicativeParameterName.smell_type)
-      expect(warning.parameters[:name]).to eq('bar2')
-      expect(warning.context).to match('foo')
-      expect(warning.lines).to eq([1])
     end
   end
 

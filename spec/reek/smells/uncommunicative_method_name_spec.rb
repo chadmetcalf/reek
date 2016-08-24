@@ -1,10 +1,19 @@
 require_relative '../../spec_helper'
 require_lib 'reek/smells/uncommunicative_method_name'
-require_relative 'smell_detector_shared'
 
 RSpec.describe Reek::Smells::UncommunicativeMethodName do
-  let(:detector) { build(:smell_detector, smell_type: :UncommunicativeMethodName) }
-  it_should_behave_like 'SmellDetector'
+  it 'reports the right values' do
+    src = <<-EOS
+      def m; end
+    EOS
+
+    expect(src).to reek_of(described_class,
+                           lines:   [1],
+                           context: 'm',
+                           message: "has the name 'm'",
+                           source:  'string',
+                           name:    'm')
+  end
 
   describe 'default configuration' do
     it 'reports one-word names' do
@@ -23,28 +32,6 @@ RSpec.describe Reek::Smells::UncommunicativeMethodName do
       ['+', '-', '/', '*'].each do |symbol|
         expect("def #{symbol}; end").not_to reek_of(:UncommunicativeMethodName)
       end
-    end
-  end
-
-  describe 'sniff' do
-    let(:source) { 'def x; end' }
-    let(:context) { code_context(source) }
-    let(:detector) { build(:smell_detector, smell_type: :UncommunicativeMethodName) }
-
-    it 'returns an array of smell warnings' do
-      smells = detector.sniff(context)
-      expect(smells.length).to eq(1)
-      expect(smells[0]).to be_a_kind_of(Reek::Smells::SmellWarning)
-    end
-
-    it 'contains proper smell warnings' do
-      smells = detector.sniff(context)
-      warning = smells[0]
-
-      expect(warning.smell_type).to eq(Reek::Smells::UncommunicativeMethodName.smell_type)
-      expect(warning.parameters[:name]).to eq('x')
-      expect(warning.context).to match(/#{warning.parameters[:name]}/)
-      expect(warning.lines).to eq([1])
     end
   end
 
