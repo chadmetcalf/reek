@@ -1,11 +1,33 @@
 require_relative '../../spec_helper'
 require_lib 'reek/smells/control_parameter'
-require_relative 'smell_detector_shared'
 
 RSpec.describe Reek::Smells::ControlParameter do
-  let(:detector) { build(:smell_detector, smell_type: :ControlParameter) }
+  it 'reports the right values' do
+    src = <<-EOS
+      def m(arga)
+        arga ? @ivar : 3
+      end
+    EOS
 
-  it_should_behave_like 'SmellDetector'
+    expect(src).to reek_of(:ControlParameter,
+                           lines:    [2],
+                           context:  'm',
+                           message:  'is controlled by argument arga',
+                           source:   'string',
+                           argument: 'arga')
+  end
+
+  it 'does count all occurences' do
+    src = <<-EOS
+      def m(arga, argb)
+        arga ? @one : 5
+        argb ? @two : 7
+      end
+    EOS
+
+    expect(src).to reek_of(:ControlParameter, lines: [2], argument: 'arga')
+    expect(src).to reek_of(:ControlParameter, lines: [3], argument: 'argb')
+  end
 
   context 'parameter not used to determine code path' do
     it 'does not report a ternary check on an ivar' do
@@ -256,37 +278,6 @@ RSpec.describe Reek::Smells::ControlParameter do
         end
       EOS
       expect(src).not_to reek_of(:ControlParameter)
-    end
-  end
-
-  context 'when a smell is reported' do
-    let(:warning) do
-      src = <<-EOS
-        def things(arg)
-          @text.map do |blk|
-            arg ? blk : "blk"
-          end
-          puts "hello" if arg
-        end
-      EOS
-      ctx = Reek::Context::MethodContext.new(nil, Reek::Source::SourceCode.from(src).syntax_tree)
-      smells = detector.run_for(ctx)
-      expect(smells.length).to eq(1)
-      smells.first
-    end
-
-    it_should_behave_like 'common fields set correctly'
-
-    it 'reports the argument' do
-      expect(warning.parameters[:argument]).to eq('arg')
-    end
-
-    it 'reports the lines' do
-      expect(warning.lines).to eq([3, 5])
-    end
-
-    it 'has the right message' do
-      expect(warning.message).to eq('is controlled by argument arg')
     end
   end
 end
