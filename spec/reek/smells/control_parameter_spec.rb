@@ -25,8 +25,9 @@ RSpec.describe Reek::Smells::ControlParameter do
       end
     EOS
 
-    expect(src).to reek_of(described_class, lines: [2], argument: 'arga')
-    expect(src).to reek_of(described_class, lines: [3], argument: 'argb')
+    expect(src).
+      to reek_of(described_class, lines: [2], argument: 'arga').
+      and reek_of(described_class, lines: [3], argument: 'argb')
   end
 
   context 'parameter not used to determine code path' do
