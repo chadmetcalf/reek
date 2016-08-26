@@ -36,14 +36,9 @@ RSpec.describe Reek::Smells::DuplicateMethodCall do
       end
     EOS
 
-    expect(src).to reek_of(described_class,
-                           lines: [3, 4],
-                           name:  'this.thing',
-                           count: 2)
-    expect(src).to reek_of(described_class,
-                           lines: [8, 9],
-                           name:  'that.thing',
-                           count: 2)
+    expect(src).
+      to reek_of(described_class, lines: [3, 4], name: 'this.thing', count: 2).
+      and reek_of(described_class, lines: [8, 9], name: 'that.thing', count: 2)
   end
 
   context 'with repeated method calls' do
@@ -57,13 +52,14 @@ RSpec.describe Reek::Smells::DuplicateMethodCall do
       expect(src).to reek_of(described_class, name: '@other.thing(2,3)')
     end
 
-    it 'should report nested calls' do
+    it 'reports nested calls' do
       src = 'def double_thing() @other.thing.foo + @other.thing.foo end'
-      expect(src).to reek_of(described_class, name: '@other.thing')
-      expect(src).to reek_of(described_class, name: '@other.thing.foo')
+      expect(src).
+        to reek_of(described_class, name: '@other.thing').
+        and reek_of(described_class, name: '@other.thing.foo')
     end
 
-    it 'should ignore calls to new' do
+    it 'ignores calls to new' do
       src = 'def double_thing() @other.new + @other.new end'
       expect(src).not_to reek_of(described_class)
     end
@@ -153,12 +149,12 @@ RSpec.describe Reek::Smells::DuplicateMethodCall do
   end
 
   context 'non-repeated method calls' do
-    it 'should not report similar calls' do
+    it 'does not report similar calls' do
       src = 'def equals(other) other.thing == self.thing end'
       expect(src).not_to reek_of(described_class)
     end
 
-    it 'should respect call parameters' do
+    it 'respects call parameters' do
       src = 'def double_thing() @other.thing(3) + @other.thing(2) end'
       expect(src).not_to reek_of(described_class)
     end
