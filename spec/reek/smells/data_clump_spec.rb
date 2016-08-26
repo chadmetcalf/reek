@@ -33,12 +33,9 @@ RSpec.describe Reek::Smells::DataClump do
       end
     EOS
 
-    expect(src).to reek_of(described_class,
-                           lines:      [2, 3, 4],
-                           parameters: ['x1', 'x2'])
-    expect(src).to reek_of(described_class,
-                           lines:      [6, 7, 8],
-                           parameters: ['y1', 'y2'])
+    expect(src).
+      to reek_of(described_class, lines: [2, 3, 4], parameters: ['x1', 'x2']).
+      and reek_of(described_class, lines: [6, 7, 8], parameters: ['y1', 'y2'])
   end
 
   %w(class module).each do |scope|
