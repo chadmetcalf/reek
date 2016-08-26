@@ -9,6 +9,7 @@ module Reek
     # code smell.
     #
     class ShouldReekOf
+      include RSpec::Matchers::Composable
       attr_reader :failure_message, :failure_message_when_negated
 
       def initialize(smell_type_or_class,
