@@ -24,7 +24,7 @@ RSpec.describe Reek::Smells::TooManyMethods do
                            count:   4).with_config(config)
   end
 
-  it 'should not report if we stay below max_methods' do
+  it 'does not report if we stay below max_methods' do
     src = <<-EOS
       class Dummy
         def m1; end

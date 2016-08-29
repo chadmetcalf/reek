@@ -102,7 +102,7 @@ RSpec.describe Reek::Smells::UncommunicativeParameterName do
 
     it 'make smelly names pass via regex / strings given by list / literal' do
       [[/bar2/], /bar2/, ['bar2'], 'bar2'].each do |pattern|
-        expect(source).to_not reek_of(described_class).with_config('accept' => pattern)
+        expect(source).not_to reek_of(described_class).with_config('accept' => pattern)
       end
     end
   end
@@ -118,7 +118,7 @@ RSpec.describe Reek::Smells::UncommunicativeParameterName do
   end
 
   describe '.default_config' do
-    it 'should merge in the default accept and reject patterns' do
+    it 'merges in the default accept and reject patterns' do
       expected = {
         'enabled' => true,
         'exclude' => [],
@@ -130,7 +130,7 @@ RSpec.describe Reek::Smells::UncommunicativeParameterName do
   end
 
   describe '.contexts' do
-    it 'should be scoped to classes and modules' do
+    it 'is scoped to classes and modules' do
       expect(described_class.contexts).to eq([:def, :defs])
     end
   end
