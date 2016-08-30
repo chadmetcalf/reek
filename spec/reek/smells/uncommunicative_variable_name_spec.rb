@@ -46,12 +46,13 @@ RSpec.describe Reek::Smells::UncommunicativeVariableName do
 
   context 'local variable name' do
     it 'does not report one-word variable name' do
-      expect('def help(fred) simple = jim(45) end').
-        not_to reek_of(:UncommunicativeVariableName)
+      src = 'def help(fred) simple = jim(45) end'
+      expect(src).not_to reek_of(:UncommunicativeVariableName)
     end
 
     it 'does not report single underscore as a variable name' do
-      expect('def help(fred) _ = jim(45) end').not_to reek_of(:UncommunicativeVariableName)
+      src = 'def help(fred) _ = jim(45) end'
+      expect(src).not_to reek_of(:UncommunicativeVariableName)
     end
 
     it 'reports one-letter variable name' do
@@ -77,8 +78,8 @@ RSpec.describe Reek::Smells::UncommunicativeVariableName do
     end
 
     it 'reports variable name outside any method' do
-      expect('class Simple; x = jim(45); end').to reek_of(:UncommunicativeVariableName,
-                                                          name: 'x')
+      src = 'class Simple; x = jim(45); end'
+      expect(src).to reek_of(:UncommunicativeVariableName, name: 'x')
     end
   end
 

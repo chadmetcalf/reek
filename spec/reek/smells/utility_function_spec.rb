@@ -112,41 +112,50 @@ RSpec.describe Reek::Smells::UtilityFunction do
 
   context 'with no calls' do
     it 'does not report empty method' do
-      expect('def simple(arga) end').not_to reek_of(:UtilityFunction)
+      src = 'def simple(arga) end'
+      expect(src).not_to reek_of(:UtilityFunction)
     end
 
     it 'does not report literal' do
-      expect('def simple() 3; end').not_to reek_of(:UtilityFunction)
+      src = 'def simple() 3; end'
+      expect(src).not_to reek_of(:UtilityFunction)
     end
 
     it 'does not report instance variable reference' do
-      expect('def simple() @yellow end').not_to reek_of(:UtilityFunction)
+      src = 'def simple() @yellow end'
+      expect(src).not_to reek_of(:UtilityFunction)
     end
 
     it 'does not report vcall' do
-      expect('def simple() y end').not_to reek_of(:UtilityFunction)
+      src = 'def simple() y end'
+      expect(src).not_to reek_of(:UtilityFunction)
     end
 
     it 'does not report references to self' do
-      expect('def into; self; end').not_to reek_of(:UtilityFunction)
+      src = 'def into; self; end'
+      expect(src).not_to reek_of(:UtilityFunction)
     end
 
     it 'recognises an ivar reference within a block' do
-      expect('def clean(text) text.each { @fred = 3} end').not_to reek_of(:UtilityFunction)
+      src = 'def clean(text) text.each { @fred = 3} end'
+      expect(src).not_to reek_of(:UtilityFunction)
     end
 
     it 'copes with nil superclass' do
-      expect('class Object; def is_maybe?() false end end').not_to reek_of(:UtilityFunction)
+      src = 'class Object; def is_maybe?() false end end'
+      expect(src).not_to reek_of(:UtilityFunction)
     end
   end
 
   context 'with only one call' do
     it 'reports a call to a parameter' do
-      expect('def simple(arga) arga.to_s end').to reek_of(:UtilityFunction, context: 'simple')
+      src = 'def simple(arga) arga.to_s end'
+      expect(src).to reek_of(:UtilityFunction, context: 'simple')
     end
 
     it 'reports a call to a constant' do
-      expect('def simple(arga) FIELDS[arga] end').to reek_of(:UtilityFunction, context: 'simple')
+      src = 'def simple(arga) FIELDS[arga] end'
+      expect(src).to reek_of(:UtilityFunction, context: 'simple')
     end
   end
 
@@ -158,22 +167,23 @@ RSpec.describe Reek::Smells::UtilityFunction do
     end
 
     it 'counts a local call in a param initializer' do
-      expect('def simple(arga=local) arga.to_s end').not_to reek_of(:UtilityFunction)
+      src = 'def simple(arga=local) arga.to_s end'
+      expect(src).not_to reek_of(:UtilityFunction)
     end
 
     it 'counts usages of self' do
-      expect('def <=>(other) Options[:sort_order].compare(self, other) end').
-        not_to reek_of(:UtilityFunction)
+      src = 'def <=>(other) Options[:sort_order].compare(self, other) end'
+      expect(src).not_to reek_of(:UtilityFunction)
     end
 
     it 'counts self reference within a dstr' do
-      expect('def as(alias_name); "#{self} as #{alias_name}".to_sym; end').
-        not_to reek_of(:UtilityFunction)
+      src = 'def as(alias_name); "#{self} as #{alias_name}".to_sym; end'
+      expect(src).not_to reek_of(:UtilityFunction)
     end
 
     it 'counts calls to self within a dstr' do
-      expect('def to_sql; "\'#{self.gsub(/\'/, "\'\'")}\'"; end').
-        not_to reek_of(:UtilityFunction)
+      src = 'def to_sql; "\'#{self.gsub(/\'/, "\'\'")}\'"; end'
+      expect(src).not_to reek_of(:UtilityFunction)
     end
 
     it 'reports message chain' do
@@ -183,11 +193,13 @@ RSpec.describe Reek::Smells::UtilityFunction do
     end
 
     it 'does not report a method that calls super' do
-      expect('def child(arg) super; arg.to_s; end').not_to reek_of(:UtilityFunction)
+      src = 'def child(arg) super; arg.to_s; end'
+      expect(src).not_to reek_of(:UtilityFunction)
     end
 
     it 'does not report a method that calls super with arguments' do
-      expect('def child(arg) super(arg * 2); arg.to_s; end').not_to reek_of(:UtilityFunction)
+      src = 'def child(arg) super(arg * 2); arg.to_s; end'
+      expect(src).not_to reek_of(:UtilityFunction)
     end
 
     it 'recognises a deep call' do

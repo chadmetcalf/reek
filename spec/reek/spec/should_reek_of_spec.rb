@@ -134,7 +134,8 @@ RSpec.describe Reek::Spec::ShouldReekOf do
     default_config = Reek::Smells::UnusedPrivateMethod.default_config
     expect(default_config[Reek::Smells::SmellConfiguration::ENABLED_KEY]).to be_falsy
 
-    expect('class C; private; def foo; end; end').to reek_of(:UnusedPrivateMethod)
+    src = 'class C; private; def foo; end; end'
+    expect(src).to reek_of(:UnusedPrivateMethod)
   end
 
   describe '#with_config' do

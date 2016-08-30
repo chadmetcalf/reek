@@ -30,7 +30,8 @@ RSpec.describe Reek::Smells::NilCheck do
   end
 
   it 'reports nothing when scope includes no nil checks' do
-    expect('def no_nils; end').not_to reek_of(described_class)
+    src = 'def no_nils; end'
+    expect(src).not_to reek_of(described_class)
   end
 
   it 'reports when scope uses == nil' do

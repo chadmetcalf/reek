@@ -31,11 +31,13 @@ RSpec.describe Reek::Smells::UnusedParameters do
   end
 
   it 'reports nothing for no parameters' do
-    expect('def simple; true end').not_to reek_of(:UnusedParameters)
+    src = 'def simple; true end'
+    expect(src).not_to reek_of(:UnusedParameters)
   end
 
   it 'reports nothing for used parameter' do
-    expect('def simple(sum); sum end').not_to reek_of(:UnusedParameters)
+    src = 'def simple(sum); sum end'
+    expect(src).not_to reek_of(:UnusedParameters)
   end
 
   it 'reports for 1 used and 2 unused parameter' do
@@ -51,54 +53,66 @@ RSpec.describe Reek::Smells::UnusedParameters do
   end
 
   it 'reports nothing for used splatted parameter' do
-    expect('def simple(*sum); sum end').not_to reek_of(:UnusedParameters)
+    src = 'def simple(*sum); sum end'
+    expect(src).not_to reek_of(:UnusedParameters)
   end
 
   it 'reports nothing for unused anonymous parameter' do
-    expect('def simple(_); end').not_to reek_of(:UnusedParameters)
+    src = 'def simple(_); end'
+    expect(src).not_to reek_of(:UnusedParameters)
   end
 
   it 'reports nothing for named parameters prefixed with _' do
-    expect('def simple(_name); end').not_to reek_of(:UnusedParameters)
+    src = 'def simple(_name); end'
+    expect(src).not_to reek_of(:UnusedParameters)
   end
 
   it 'reports nothing for unused anonymous splatted parameter' do
-    expect('def simple(*); end').not_to reek_of(:UnusedParameters)
+    src = 'def simple(*); end'
+    expect(src).not_to reek_of(:UnusedParameters)
   end
 
   it 'reports nothing when using super with implicit arguments' do
-    expect('def simple(*args); super; end').not_to reek_of(:UnusedParameters)
+    src = 'def simple(*args); super; end'
+    expect(src).not_to reek_of(:UnusedParameters)
   end
 
   it 'reports something when using super explicitely passing no arguments' do
-    expect('def simple(*args); super(); end').to reek_of(:UnusedParameters)
+    src = 'def simple(*args); super(); end'
+    expect(src).to reek_of(:UnusedParameters)
   end
 
   it 'reports nothing when using super explicitely passing all arguments' do
-    expect('def simple(*args); super(*args); end').not_to reek_of(:UnusedParameters)
+    src = 'def simple(*args); super(*args); end'
+    expect(src).not_to reek_of(:UnusedParameters)
   end
 
   it 'reports nothing when using super in a nested context' do
-    expect('def simple(*args); call_other("something", super); end').
+    src = 'def simple(*args); call_other("something", super); end'
+    expect(src).
       not_to reek_of(:UnusedParameters)
   end
 
   it 'reports something when not using a keyword argument with splat' do
-    expect('def simple(var, kw: :val, **args); @var, @kw = var, kw; end').
+    src = 'def simple(var, kw: :val, **args); @var, @kw = var, kw; end'
+    expect(src).
       to reek_of(:UnusedParameters)
   end
 
   it 'reports nothing when using a keyword argument with splat' do
-    expect('def simple(var, kw: :val, **args); @var, @kw, @args = var, kw, args; end').
+    src = 'def simple(var, kw: :val, **args); @var, @kw, @args = var, kw, args; end'
+    expect(src).
       not_to reek_of(:UnusedParameters)
   end
 
   it 'reports nothing when using a parameter via self assignment' do
-    expect('def simple(counter); counter += 1; end').not_to reek_of(:UnusedParameters)
+    src = 'def simple(counter); counter += 1; end'
+    expect(src).not_to reek_of(:UnusedParameters)
   end
 
   it 'reports nothing when using a parameter on a rescue' do
-    expect('def simple(tries = 3); puts "nothing"; rescue; retry if tries -= 1 > 0; raise; end').
+    src = 'def simple(tries = 3); puts "nothing"; rescue; retry if tries -= 1 > 0; raise; end'
+    expect(src).
       not_to reek_of(:UnusedParameters)
   end
 end

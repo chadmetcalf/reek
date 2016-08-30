@@ -17,15 +17,18 @@ RSpec.describe Reek::Smells::UncommunicativeMethodName do
 
   describe 'default configuration' do
     it 'reports one-word names' do
-      expect('def a; end').to reek_of(:UncommunicativeMethodName)
+      src = 'def a; end'
+      expect(src).to reek_of(:UncommunicativeMethodName)
     end
 
     it 'reports names ending with a digit' do
-      expect('def xyz1; end').to reek_of(:UncommunicativeMethodName)
+      src = 'def xyz1; end'
+      expect(src).to reek_of(:UncommunicativeMethodName)
     end
 
     it 'reports camelcased names' do
-      expect('def aBBa; end').to reek_of(:UncommunicativeMethodName)
+      src = 'def aBBa; end'
+      expect(src).to reek_of(:UncommunicativeMethodName)
     end
 
     it 'does not report one-letter special characters' do
