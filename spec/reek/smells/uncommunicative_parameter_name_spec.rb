@@ -24,12 +24,9 @@ RSpec.describe Reek::Smells::UncommunicativeParameterName do
       end
     EOS
 
-    expect(src).to reek_of(described_class,
-                           lines: [1],
-                           name:  'a')
-    expect(src).to reek_of(described_class,
-                           lines: [1],
-                           name:  'b')
+    expect(src).
+      to reek_of(described_class, lines: [1], name: 'a').
+      and reek_of(described_class, lines: [1], name: 'b')
   end
 
   { 'obj.' => 'with a receiver',

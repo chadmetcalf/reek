@@ -23,12 +23,9 @@ RSpec.describe Reek::Smells::Attribute do
       end
     EOS
 
-    expect(src).to reek_of(described_class,
-                           lines:   [2],
-                           context: 'Klass#my_attr_1')
-    expect(src).to reek_of(described_class,
-                           lines:   [3],
-                           context: 'Klass#my_attr_2')
+    expect(src).
+      to reek_of(described_class, lines: [2], context: 'Klass#my_attr_1').
+      and reek_of(described_class, lines: [3], context: 'Klass#my_attr_2')
   end
 
   it 'records nothing with no attributes' do
