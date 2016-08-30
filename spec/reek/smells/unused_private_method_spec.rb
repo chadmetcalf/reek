@@ -33,12 +33,9 @@ RSpec.describe Reek::Smells::UnusedPrivateMethod do
       end
     EOS
 
-    expect(src).to reek_of(described_class,
-                           lines: [4],
-                           name:  :m1)
-    expect(src).to reek_of(described_class,
-                           lines: [7],
-                           name:  :m2)
+    expect(src).
+      to reek_of(described_class, lines: [4], name: :m1).
+      and reek_of(described_class, lines: [7], name: :m2)
   end
 
   context 'unused private methods' do
@@ -51,8 +48,9 @@ RSpec.describe Reek::Smells::UnusedPrivateMethod do
         end
       EOF
 
-      expect(source).to reek_of(:UnusedPrivateMethod, name: :start)
-      expect(source).to reek_of(:UnusedPrivateMethod, name: :drive)
+      expect(source).
+        to reek_of(:UnusedPrivateMethod, name: :start).
+        and reek_of(:UnusedPrivateMethod, name: :drive)
     end
 
     it 'reports instance methods in the correct class' do
@@ -65,8 +63,9 @@ RSpec.describe Reek::Smells::UnusedPrivateMethod do
         end
       EOF
 
-      expect(source).to reek_of(:UnusedPrivateMethod, context: 'Car::Engine', name: :start)
-      expect(source).not_to reek_of(:UnusedPrivateMethod, context: 'Car', name: :start)
+      expect(source).
+        to reek_of(:UnusedPrivateMethod, context: 'Car::Engine', name: :start).
+        and not_reek_of(:UnusedPrivateMethod, context: 'Car', name: :start)
     end
 
     it 'discounts calls to identically named methods in nested classes' do
@@ -84,8 +83,9 @@ RSpec.describe Reek::Smells::UnusedPrivateMethod do
         end
       EOF
 
-      expect(source).not_to reek_of(:UnusedPrivateMethod, context: 'Car::Engine', name: :start)
-      expect(source).to reek_of(:UnusedPrivateMethod, context: 'Car', name: :start)
+      expect(source).
+        to reek_of(:UnusedPrivateMethod, context: 'Car', name: :start).
+        and not_reek_of(:UnusedPrivateMethod, context: 'Car::Engine', name: :start)
     end
 
     it 'creates warnings correctly' do
@@ -97,8 +97,9 @@ RSpec.describe Reek::Smells::UnusedPrivateMethod do
         end
       EOF
 
-      expect(source).to reek_of(:UnusedPrivateMethod, name: :drive, lines: [4])
-      expect(source).to reek_of(:UnusedPrivateMethod, name: :start, lines: [3])
+      expect(source).
+        to reek_of(:UnusedPrivateMethod, name: :drive, lines: [4]).
+        and reek_of(:UnusedPrivateMethod, name: :start, lines: [3])
     end
   end
 
@@ -113,8 +114,9 @@ RSpec.describe Reek::Smells::UnusedPrivateMethod do
         end
       EOF
 
-      expect(source).to reek_of(:UnusedPrivateMethod, name: :drive)
-      expect(source).not_to reek_of(:UnusedPrivateMethod, name: :start)
+      expect(source).
+        to reek_of(:UnusedPrivateMethod, name: :drive).
+        and not_reek_of(:UnusedPrivateMethod, name: :start)
     end
   end
 
@@ -174,15 +176,17 @@ RSpec.describe Reek::Smells::UnusedPrivateMethod do
     it 'excludes them via direct match in the app configuration' do
       config = { Reek::Smells::SmellDetector::EXCLUDE_KEY => ['Car#drive'] }
 
-      expect(source).to reek_of(:UnusedPrivateMethod, name: :start).with_config(config)
-      expect(source).not_to reek_of(:UnusedPrivateMethod, name: :drive).with_config(config)
+      expect(source).
+        to reek_of(:UnusedPrivateMethod, name: :start).with_config(config).
+        and not_reek_of(:UnusedPrivateMethod, name: :drive).with_config(config)
     end
 
     it 'excludes them via regex in the app configuration' do
       config = { Reek::Smells::SmellDetector::EXCLUDE_KEY => [/drive/] }
 
-      expect(source).to reek_of(:UnusedPrivateMethod, name: :start).with_config(config)
-      expect(source).not_to reek_of(:UnusedPrivateMethod, name: :drive).with_config(config)
+      expect(source).
+        to reek_of(:UnusedPrivateMethod, name: :start).with_config(config).
+        and not_reek_of(:UnusedPrivateMethod, name: :drive).with_config(config)
     end
   end
 end
